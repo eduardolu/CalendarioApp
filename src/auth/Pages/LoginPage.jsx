@@ -5,7 +5,7 @@ import Swal from 'sweetalert2'
 import './login.css';
 
 const loginFormFields={
-    loginEmail     : '',
+    loginEmail    : '',
     loginPassword : '',
 }
 
