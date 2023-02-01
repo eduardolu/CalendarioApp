@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { calendarApi } from '../api'
-import { clearErrorMessage, onCheking, onLogin, onLogout } from '../store'
+import { clearErrorMessage, onCheking, onLogin, onLogout, onLogoutCalendar } from '../store'
 
 
 export const useAuthStore = () => {
@@ -15,7 +15,7 @@ export const useAuthStore = () => {
             const { data } = await calendarApi.post('/auth', { email, passward })
             localStorage.setItem('token', data.token)
             localStorage.setItem('token-init-date', new Date().getTime())
-            dispatch(onLogin({ name: data.name, uid: data.uid }))
+            dispatch( onLogin({ name: data.name, uid: data.uid }))
             
         } catch (error) {
             dispatch(onLogout('error de login'))
@@ -34,7 +34,7 @@ export const useAuthStore = () => {
             dispatch(onLogin({ name: data.name, uid: data.uid }))
             
         } catch (error) {
-            dispatch(onLogout(error.response.data?.msg || 'Error no esperado'))
+            dispatch(onLogout(error.response.data?.msg || '---'))
             setTimeout(()=>{
                 dispatch(clearErrorMessage())
             },10);
@@ -43,7 +43,7 @@ export const useAuthStore = () => {
     }
     const checkAuthToken = async() =>{
         const token = localStorage.getItem('token')
-        if (!token ) return dispatch(onLogout())
+        if (!token ) return dispatch( onLogout() )
 
         try {
             const { data } = await calendarApi.post('/auth/renew')
@@ -60,6 +60,7 @@ export const useAuthStore = () => {
 
     const startLogout = () => {
         localStorage.clear();
+        dispatch ( onLogoutCalendar())
         dispatch ( onLogout())
 
     }

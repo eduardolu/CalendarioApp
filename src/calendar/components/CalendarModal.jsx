@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from 'react'
-import { useDispatch} from 'react-redux'
+import { useDispatch } from 'react-redux'
 import Modal from 'react-modal';
 import Swal from 'sweetalert2'
 import 'sweetalert2/dist/sweetalert2.min.css'
@@ -9,7 +9,7 @@ import DatePicker, {registerLocale} from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import es from 'date-fns/locale/es';
 import { useUiStore } from '../../hooks/useUiStore';
-import { useCalendarStore } from '../../hooks';
+import { useAuthStore, useCalendarStore } from '../../hooks';
 
 registerLocale('es', es)
 
@@ -30,8 +30,12 @@ const customStyles = {
     const dispatch = useDispatch()
     const { activeEvent,startSavingEvent } = useCalendarStore()
     const { isDateModalOpen,closeDateModal } = useUiStore()
+    const { user } = useAuthStore();
     //const [isOpen, setIsOpen] = useState(true)
     const [formSubmitted, setFormSubmitted] = useState(false)
+    
+    //const isMyTarea = (activeEvent.user_id === user.uid) || (activeEvent.user_uid === user.id)
+    // console.log(isMyTarea)
     const [formValues, setFormValues] = useState({
         title: '',
         notes: '',
@@ -88,7 +92,7 @@ const customStyles = {
             console.log('titulo vacio');   
             return;         
         }
-        console.log({formValues});
+        //console.log({formValues});
 
         await startSavingEvent(formValues)
         closeDateModal()
@@ -168,9 +172,13 @@ const customStyles = {
             <button
                 type="submit"
                 className="btn btn-outline-primary btn-block"
+                // {
+                //     isMyTarea ? 'disabled' : ''
+                // }
+                
             >
                 <i className="far fa-save"></i>
-                <span> Guardar</span>
+                <span> Guardar </span>
             </button>
 
         </form>
